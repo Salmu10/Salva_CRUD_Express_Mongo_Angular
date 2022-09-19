@@ -14,7 +14,7 @@ export class FurnituresListComponent implements OnInit {
   currentIndex = -1;
   title = '';
 
-  constructor(privatefurnitureService: FurnitureService) { }
+  constructor(private furnitureService: FurnitureService) { }
 
   ngOnInit(): void {
     this.retrieveFurnitures();
