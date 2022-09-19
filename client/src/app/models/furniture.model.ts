@@ -1,4 +1,4 @@
-export class Tutorial {
+export class Furniture {
   id?: any;
   title?: string;
   description?: string;

@@ -1,18 +1,18 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { TutorialService } from 'src/app/services/tutorial.service';
+import { FurnitureService } from 'src/app/services/furniture.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Tutorial } from 'src/app/models/tutorial.model';
+import { Furniture } from 'src/app/models/furniture.model';
 
 @Component({
-  selector: 'app-tutorial-details',
-  templateUrl: './tutorial-details.component.html',
-  styleUrls: ['./tutorial-details.component.css']
+  selector: 'app-furniture-details',
+  templateUrl: './furniture-details.component.html',
+  styleUrls: ['./furniture-details.component.css']
 })
-export class TutorialDetailsComponent implements OnInit {
+export class FurnitureDetailsComponent implements OnInit {
 
   @Input() viewMode = false;
 
-  @Input() currentTutorial: Tutorial = {
+  @Input() currentFurniture: Furniture = {
     title: '',
     description: '',
     published: false
@@ -21,22 +21,22 @@ export class TutorialDetailsComponent implements OnInit {
   message = '';
 
   constructor(
-    private tutorialService: TutorialService,
+    private furnitureService: FurnitureService,
     private route: ActivatedRoute,
     private router: Router) { }
 
   ngOnInit(): void {
     if (!this.viewMode) {
       this.message = '';
-      this.getTutorial(this.route.snapshot.params["id"]);
+      this.getFurniture(this.route.snapshot.params["id"]);
     }
   }
 
-  getTutorial(id: string): void {
-    this.tutorialService.get(id)
+  getFurniture(id: string): void {
+    this.furnitureService.get(id)
       .subscribe({
         next: (data) => {
-          this.currentTutorial = data;
+          this.currentFurniture = data;
           console.log(data);
         },
         error: (e) => console.error(e)
@@ -45,43 +45,43 @@ export class TutorialDetailsComponent implements OnInit {
 
   updatePublished(status: boolean): void {
     const data = {
-      title: this.currentTutorial.title,
-      description: this.currentTutorial.description,
+      title: this.currentFurniture.title,
+      description: this.currentFurniture.description,
       published: status
     };
 
     this.message = '';
 
-    this.tutorialService.update(this.currentTutorial.id, data)
+    this.furnitureService.update(this.currentFurniture.id, data)
       .subscribe({
         next: (res) => {
           console.log(res);
-          this.currentTutorial.published = status;
+          this.currentFurniture.published = status;
           this.message = res.message ? res.message : 'The status was updated successfully!';
         },
         error: (e) => console.error(e)
       });
   }
 
-  updateTutorial(): void {
+  updateFurniture(): void {
     this.message = '';
 
-    this.tutorialService.update(this.currentTutorial.id, this.currentTutorial)
+    this.furnitureService.update(this.currentFurniture.id, this.currentFurniture)
       .subscribe({
         next: (res) => {
           console.log(res);
-          this.message = res.message ? res.message : 'This tutorial was updated successfully!';
+          this.message = res.message ? res.message : 'This furniture was updated successfully!';
         },
         error: (e) => console.error(e)
       });
   }
 
-  deleteTutorial(): void {
-    this.tutorialService.delete(this.currentTutorial.id)
+  deleteFurniture(): void {
+    this.furnitureService.delete(this.currentFurniture.id)
       .subscribe({
         next: (res) => {
           console.log(res);
-          this.router.navigate(['/tutorials']);
+          this.router.navigate(['/furnitures']);
         },
         error: (e) => console.error(e)
       });
