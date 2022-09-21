@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 
+const db = require("./app/config/db.config.js");
+const mongoose = require('mongoose');
+
 const app = express();
 
 var corsOptions = {
@@ -15,11 +18,7 @@ app.use(express.json());
 // parse requests of content-type - application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: true }));
 
-const db = require("./app/config/db.config.js");
-const mongoose = require('mongoose');
-
 mongoose.Promise = global.Promise;
-console.log(db);
 
 mongoose.connect(db.url, {
     useNewUrlParser: true,
@@ -38,7 +37,10 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to Salva wallapop application." });
 });
 
-require("./app/routes/furniture.routes")(app);
+// require("./app/routes/furniture.routes")(app);
+// require("./app/routes/category.routes")(app);
+
+app.use('/api/furnitures', require('./app/routes/furniture.routes'));
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

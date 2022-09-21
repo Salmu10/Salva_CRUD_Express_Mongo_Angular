@@ -36,7 +36,7 @@ exports.findAll = (req, res) => {
   var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
 
   Category.find(condition)
-    .then(data => {
+  .then(data => {
       res.send(data);
     })
     .catch(err => {
@@ -51,8 +51,9 @@ exports.findAll = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  category.findById(id)
-    .then(data => {
+  Category.findById(id)
+  .then(data => {
+        console.log('log: ' + data);
       if (!data)
         res.status(404).send({ message: "Not found Category with id " + id });
       else res.send(data);

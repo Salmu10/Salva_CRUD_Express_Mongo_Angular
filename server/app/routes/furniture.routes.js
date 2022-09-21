@@ -1,28 +1,19 @@
-module.exports = app => {
-  const furnitures = require("../controllers/furniture.controller.js");
+const express = require('express');
+const router = express.Router();
+const furnitures = require('../controllers/furniture.controller.js');
 
-  var router = require("express").Router();
+  
+//api/furnitures
+router.post('/', furnitures.create_furniture);
 
-  // Create a new Furniture
-  router.post("/", furnitures.create);
+router.get('/', furnitures.findAll_furniture);
 
-  // Retrieve all Furnitures
-  router.get("/", furnitures.findAll);
+router.get('/:id', furnitures.findOne_furniture);
 
-  // Retrieve all published Furnitures
-  router.get("/published", furnitures.findAllPublished);
+router.put('/:id', furnitures.update_furniture);
 
-  // Retrieve a single Furniture with id
-  router.get("/:id", furnitures.findOne);
+router.delete('/:id', furnitures.delete_furniture);
 
-  // Update a Furniture with id
-  router.put("/:id", furnitures.update);
+router.delete('_all', furnitures.deleteAll_furnitures);
 
-  // Delete a Furniture with id
-  router.delete("/:id", furnitures.delete);
-
-  // Create a new Furniture
-  router.delete("/", furnitures.deleteAll);
-
-  app.use("/api/furnitures", router);
-};
+module.exports = router;

@@ -1,143 +1,93 @@
-const db = require("../models");
-const Furniture = db.furnitures;
+// const db = require("../models");
+// const Furniture = db.furnitures;
+
+// import Furniture from "../models/furniture.model.js";
+const Furniture = require("../models/furniture.model.js");
 
 // Create and Save a new Furniture
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.title) {
-    res.status(400).send({ message: "Content can not be empty!" });
-    return;
+exports.create_furniture = async (req, res) => {
+  try {
+    const furniture_data = {
+        name: req.body.name || null,
+        price: req.body.price || 0,
+        description: req.body.description || null,
+        owner: req.body.owner || null,
+    };
+    const furniture = new Furniture(furniture_data);
+    const new_furniture = await furniture.save();
+    res.json(new_furniture);
+  } catch (error) {
+    res.status(500).send({message: err.message || "Some error occurred while creating the Furniture."});
   }
-
-  // Create a Furniture
-  const furniture = new Furniture({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published ? req.body.published : false
-  });
-
-  // Save Furniture in the database
-  furniture
-    .save(furniture)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Furniture."
-      });
-    });
 };
 
 // Retrieve all Furniture from the database.
-exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
-
-  Furniture.find(condition)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving furnitures."
-      });
-    });
-};
-
-// Find a single Furniture with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  Furniture.findById(id)
-    .then(data => {
-      if (!data)
-        res.status(404).send({ message: "Not found Furniture with id " + id });
-      else res.send(data);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving Furniture with id=" + id });
-    });
-};
-
-// Update a Furniture by the id in the request
-exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
-    });
+exports.findAll_furniture = async (req, res) => {
+  try {
+    const furniture = await Furniture.find();
+    res.json(furniture);
+  } catch (error) {
+    res.status(400).send({ message: "Some error occurred while retrieving furnitures." });
   }
+}
 
-  const id = req.params.id;
-
-  Furniture.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update Furniture with id=${id}. Maybe Furniture was not found!`
-        });
-      } else res.send({ message: "Furniture was updated successfully." });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Furniture with id=" + id
-      });
-    });
-};
-
-// Delete a Furniture with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
-
-  Furniture.findByIdAndRemove(id, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot delete Furniture with id=${id}. Maybe Furniture was not found!`
-        });
+exports.findOne_furniture = async (req, res) => {
+  try {
+      const id = req.params.id
+      const furniture = await Furniture.findOne({id});
+      if (!furniture) {
+          res.status(404).json(FormatError("Furniture not found", res.statusCode));
       } else {
-        res.send({
-          message: "Furniture was deleted successfully!"
-        });
+          res.json(furniture);
+      };
+  } catch (error) {
+      if (error.kind === 'ObjectId') { res.status(404).json(FormatError("Furniture not found", res.statusCode)); }
+      else { res.status(500).json(FormatError("An error has ocurred", res.statusCode)); }
+  }
+};
+
+// // Update a Furniture by the id in the request
+exports.update_furniture = async (req, res) => {
+  try {
+      const id = req.params.id
+      const old_furniture = await Furniture.findOne({ id });
+
+      if (old_furniture.name !== req.body.name && req.body.name !== undefined) {
+          console.log('undefined_error');
       }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Furniture with id=" + id
-      });
-    });
-};
 
-// Delete all Furnitures from the database.
-exports.deleteAll = (req, res) => {
-  Furniture.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} Furnitures were deleted successfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all furnitures."
-      });
-    });
-};
+      old_furniture.name = req.body.name || old_furniture.name;
+      old_furniture.price = req.body.price || old_furniture.price;
+      old_furniture.description = req.body.description || old_furniture.description;
+      old_furniture.owner = req.body.owner || old_furniture.owner;
+      const update = await old_furniture.save();
 
-// Find all published Furnitures
-exports.findAllPublished = (req, res) => {
-  Furniture.find({ published: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving furnitures."
-      });
-    });
-};
+      if (!update) {res.status(404).send({message: `Cannot update Furniture with id=${id}. Maybe Furniture was not found!`}); }
+      res.send({ message: "Furniture was updated successfully." });
+  } catch (error) {
+      if (error.kind === 'ObjectId') {res.status(404).send({message: `Furniture not found!`}); }
+      else {res.status(500).send({message: "Error updating Furniture with id=" + id});}
+  }
+}
+
+// // Delete a Furniture with the specified id in the request
+exports.delete_furniture = async (req, res) => {
+  try {
+    const id = req.params.id
+    const furniture = await Product.findOneAndDelete({ id });
+    if (!furniture) {res.status(404).send({ message: `Cannot delete Furniture with id=${id}. Maybe Furniture was not found!`}); }
+    res.send({message: "Furniture was deleted successfully!"});
+  } catch (error) {
+    if (error.kind === 'ObjectId') {res.status(404).send({ message: `Furniture not found!`}); }
+    else { res.status(500).send({ message: "Could not delete Furniture with id=" + id }); }
+  }
+}
+
+exports.deleteAll_furnitures = async (req, res) => {
+  try {
+    const deleteALL = await Furniture.collection.drop();
+    res.send({message: `${data.deletedCount} Furnitures were deleted successfully!`});
+  } catch (error) {
+    res.status(500).send({message: err.message || "Some error occurred while removing all furnitures."});
+  }
+}

@@ -7,6 +7,7 @@ import { FurnitureService } from 'src/app/services/furniture.service';
   templateUrl: './add-furniture.component.html',
   styleUrls: ['./add-furniture.component.css']
 })
+
 export class AddFurnitureComponent implements OnInit {
 
   furniture: Furniture = {
@@ -47,3 +48,4 @@ export class AddFurnitureComponent implements OnInit {
   }
 
 }
+
