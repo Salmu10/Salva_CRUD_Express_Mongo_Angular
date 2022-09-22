@@ -1,94 +1,33 @@
-<div *ngIf="viewMode; else editable">
-  <div *ngIf="currentFurniture.id">
-    <h4>Furniture</h4>
-    <div>
-      <label><strong>Title:</strong></label> {{ currentFurniture.title }}
-    </div>
-    <div>
-      <label><strong>Description:</strong></label>
-      {{ currentFurniture.description }}
-    </div>
-    <div>
-      <label><strong>Status:</strong></label>
-      {{ currentFurniture.published ? "Published" : "Pending" }}
-    </div>
+<div>
+  <div *ngIf="currentFurniture.slug">
+      <h4>Furniture</h4>
+      <div>
+          <label><strong>ID:</strong></label> {{ currentFurniture.slug }}
+      </div>
+      <div>
+          <label><strong>Name:</strong></label> {{ currentFurniture.name }}
+      </div>
+      <div>
+          <label><strong>Description:</strong></label> {{ currentFurniture.description }}
+      </div>
+      <div>
+          <label><strong>Category:</strong></label> {{ currentFurniture.category }}
+      </div>
+      <div>
+          <label><strong>Price:</strong></label> {{ currentFurniture.price }}
+      </div>
+      <div>
+          <label><strong>Owner:</strong></label> {{ currentFurniture.owner }}
+      </div>
 
-    <a
-      class="badge badge-warning"
-      routerLink="/furnitures/{{ currentFurniture.id }}"
-    >
-      Edit
-    </a>
+      <a class="badge badge-warning" routerLink="/furniture/update/{{ currentFurniture.slug }}">
+          Edit
+      </a>
+      <a class="badge badge-danger mr-2" (click)="deleteFurniture(currentFurniture.slug)">Delete</a>
   </div>
 
-  <div *ngIf="!currentFurniture">
-    <br />
-    <p>Please click on a Furniture...</p>
+  <div *ngIf="currentFurniture.name == ''">
+      <br />
+      <p>Please click on a furniture...</p>
   </div>
 </div>
-
-<ng-template #editable>
-  <div *ngIf="currentFurniture.id" class="edit-form">
-    <h4>Furniture</h4>
-    <form>
-      <div class="form-group">
-        <label for="title">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          [(ngModel)]="currentFurniture.title"
-          name="title"
-        />
-      </div>
-      <div class="form-group">
-        <label for="description">Description</label>
-        <input
-          type="text"
-          class="form-control"
-          id="description"
-          [(ngModel)]="currentFurniture.description"
-          name="description"
-        />
-      </div>
-
-      <div class="form-group">
-        <label><strong>Status:</strong></label>
-        {{ currentFurniture.published ? "Published" : "Pending" }}
-      </div>
-    </form>
-
-    <button
-      class="badge badge-primary mr-2"
-      *ngIf="currentFurniture.published"
-      (click)="updatePublished(false)"
-    >
-      UnPublish
-    </button>
-    <button
-      *ngIf="!currentFurniture.published"
-      class="badge badge-primary mr-2"
-      (click)="updatePublished(true)"
-    >
-      Publish
-    </button>
-
-    <button class="badge badge-danger mr-2" (click)="deleteFurniture()">
-      Delete
-    </button>
-
-    <button
-      type="submit"
-      class="badge badge-success mb-2"
-      (click)="updateFurniture()"
-    >
-      Update
-    </button>
-    <p>{{ message }}</p>
-  </div>
-
-  <div *ngIf="!currentFurniture.id">
-    <br />
-    <p>Cannot access this Furniture...</p>
-  </div>
-</ng-template>

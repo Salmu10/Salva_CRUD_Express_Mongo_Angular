@@ -1,6 +1,7 @@
 export class Furniture {
-  id?: any;
-  title?: string;
-  description?: string;
-  published?: boolean;
+  slug?: String;
+  name?: String;
+  price?: Number;
+  description?: String;
+  owner?: String;
 }

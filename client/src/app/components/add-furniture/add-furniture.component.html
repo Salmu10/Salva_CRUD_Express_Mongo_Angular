@@ -1,35 +1,28 @@
 <div>
   <div class="submit-form">
-    <div *ngIf="!submitted">
-      <div class="form-group">
-        <label for="title">Title</label>
-        <input
-          type="text"
-          class="form-control"
-          id="title"
-          required
-          [(ngModel)]="furniture.title"
-          name="title"
-        />
+      <div>
+          <div class="form-group">
+              <label for="furniture_name">Furniture name</label>
+              <input type="text" class="form-control" id="furniture_name" required [(ngModel)]="new_furniture.name" name="furniture_name"/>
+          </div>
+
+          <div class="form-group">
+            <label for="furniture_description">Furniture price</label>
+            <input class="form-control" id="furniture_description" required [(ngModel)]="new_furniture.price" name="furniture_description"/>
+          </div>
+
+          <div class="form-group">
+              <label for="furniture_description">Furniture description</label>
+              <input class="form-control" id="furniture_description" required [(ngModel)]="new_furniture.description" name="furniture_description"/>
+          </div>
+
+          <div class="form-group">
+              <label for="furniture_description">Furniture owner</label>
+              <input class="form-control" id="furniture_description" required [(ngModel)]="new_furniture.owner" name="furniture_description"/>
+          </div>
+
+          <button (click)="create_furniture()" class="btn btn-success" *ngIf="!update">Add</button>
+          <button (click)="update_furniture()" class="btn btn-success" *ngIf="update">Update</button>
       </div>
-
-      <div class="form-group">
-        <label for="description">Description</label>
-        <input
-          class="form-control"
-          id="description"
-          required
-          [(ngModel)]="furniture.description"
-          name="description"
-        />
-      </div>
-
-      <button (click)="saveFurniture()" class="btn btn-success">Submit</button>
-    </div>
-
-    <div *ngIf="submitted">
-      <h4>Furniture was submitted successfully!</h4>
-      <button class="btn btn-success" (click)="newFurniture()">Add</button>
-    </div>
   </div>
 </div>

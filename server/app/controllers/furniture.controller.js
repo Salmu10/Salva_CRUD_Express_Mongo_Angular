@@ -74,7 +74,7 @@ exports.update_furniture = async (req, res) => {
 exports.delete_furniture = async (req, res) => {
   try {
     const id = req.params.id
-    const furniture = await Product.findOneAndDelete({ slug: id });
+    const furniture = await Furniture.findOneAndDelete({ slug: id });
     if (!furniture) {res.status(404).send({ message: `Cannot delete Furniture with id=${id}. Maybe Furniture was not found!`}); }
     res.send({message: "Furniture was deleted successfully!"});
   } catch (error) {

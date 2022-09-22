@@ -1,44 +1,15 @@
 <div class="list row">
-  <div class="col-md-8">
-    <div class="input-group mb-3">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Search by title"
-        [(ngModel)]="title"
-      />
-      <div class="input-group-append">
-        <button
-          class="btn btn-outline-secondary"
-          type="button"
-          (click)="searchTitle()"
-        >
-          Search
-        </button>
-      </div>
-    </div>
+  <div class="col-md-6">
+      <h4>Crud List</h4>
+      <button (click)="delete_all_furniture()">Delete ALL</button>
+      <ul class="list-group">
+          <li class="list-group-item" *ngFor="let furniture of furnitures; let i = index"
+              [class.active]="i == currentIndex" (click)="set_furniture(furniture, i)">
+              {{ furniture.name }}
+          </li>
+      </ul>
   </div>
   <div class="col-md-6">
-    <h4>Furnitures List</h4>
-    <ul class="list-group">
-      <li
-        class="list-group-item"
-        *ngFor="let furniture of furnitures; let i = index"
-        [class.active]="i == currentIndex"
-        (click)="setActiveFurniture(furniture, i)"
-      >
-        {{ furniture.title }}
-      </li>
-    </ul>
-
-    <button class="m-3 btn btn-sm btn-danger" (click)="removeAllFurnitures()">
-      Remove All
-    </button>
-  </div>
-  <div class="col-md-6">
-    <app-furniture-details
-      [viewMode]="true"
-      [currentFurniture]="currentFurniture"
-    ></app-furniture-details>
+      <app-detail-furniture [viewMode]="true" [currentFurniture]="currentFurniture"></app-detail-furniture>
   </div>
 </div>

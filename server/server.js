@@ -37,9 +37,6 @@ app.get("/", (req, res) => {
   res.json({ message: "Welcome to Salva wallapop application." });
 });
 
-// require("./app/routes/furniture.routes")(app);
-// require("./app/routes/category.routes")(app);
-
 // app.use('/api/furnitures', require('./app/routes/furniture.routes'));
 app.use('/api/categories', require('./app/routes/category.routes'));
 

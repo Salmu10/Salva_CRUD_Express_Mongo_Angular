@@ -1,90 +1,51 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FurnitureService } from 'src/app/services/furniture.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Furniture } from 'src/app/models/furniture.model';
+import { FurnitureService } from 'src/app/services/furniture.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-furniture-details',
   templateUrl: './furniture-details.component.html',
   styleUrls: ['./furniture-details.component.css']
 })
+
 export class FurnitureDetailsComponent implements OnInit {
 
-  @Input() viewMode = false;
-
-  @Input() currentFurniture: Furniture = {
-    title: '',
-    description: '',
-    published: false
-  };
-  
   message = '';
 
-  constructor(
+  constructor(private route: ActivatedRoute,
+    private router: Router,
     private furnitureService: FurnitureService,
-    private route: ActivatedRoute,
-    private router: Router) { }
+    private toastrService: ToastrService) { }
 
   ngOnInit(): void {
     if (!this.viewMode) {
       this.message = '';
-      this.getFurniture(this.route.snapshot.params["id"]);
+      console.log("no view")
     }
   }
 
-  getFurniture(id: string): void {
-    this.furnitureService.get(id)
-      .subscribe({
-        next: (data) => {
-          this.currentFurniture = data;
-          console.log(data);
-        },
-        error: (e) => console.error(e)
-      });
+  @Input() viewMode = false;
+
+  @Input() currentFurniture: Furniture = {
+    name: "",
+    price: 0,
+    description: "",
+    owner: "",
   }
 
-  updatePublished(status: boolean): void {
-    const data = {
-      title: this.currentFurniture.title,
-      description: this.currentFurniture.description,
-      published: status
-    };
-
-    this.message = '';
-
-    this.furnitureService.update(this.currentFurniture.id, data)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.currentFurniture.published = status;
-          this.message = res.message ? res.message : 'The status was updated successfully!';
-        },
-        error: (e) => console.error(e)
-      });
+  deleteFurniture(id: String): void {
+    this.furnitureService.delete_furniture(id).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+        this.toastrService.success("This furniture has been removed")
+      },
+      error: (e) => this.toastrService.error("Can't remove this furniture")
+    });
   }
 
-  updateFurniture(): void {
-    this.message = '';
-
-    this.furnitureService.update(this.currentFurniture.id, this.currentFurniture)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.message = res.message ? res.message : 'This furniture was updated successfully!';
-        },
-        error: (e) => console.error(e)
-      });
-  }
-
-  deleteFurniture(): void {
-    this.furnitureService.delete(this.currentFurniture.id)
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.router.navigate(['/furnitures']);
-        },
-        error: (e) => console.error(e)
-      });
-  }
+  updateFurniture(): void {}
 
 }

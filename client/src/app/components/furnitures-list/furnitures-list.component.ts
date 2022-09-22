@@ -1,70 +1,56 @@
 import { Component, OnInit } from '@angular/core';
 import { Furniture } from 'src/app/models/furniture.model';
 import { FurnitureService } from 'src/app/services/furniture.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-furnitures-list',
   templateUrl: './furnitures-list.component.html',
   styleUrls: ['./furnitures-list.component.css']
 })
+
 export class FurnituresListComponent implements OnInit {
 
-  furnitures?: Furniture[];
-  currentFurniture: Furniture = {};
-  currentIndex = -1;
-  title = '';
+  constructor(private furnitureService: FurnitureService, private toastrService: ToastrService) { }
 
-  constructor(private furnitureService: FurnitureService) { }
+
+  furnitures?: Furniture[];
+  currentIndex: Number = -1;
+  currentFurniture: Furniture = {
+    name: "",
+    price: 0,
+    description: "",
+    owner: ""
+  };
 
   ngOnInit(): void {
-    this.retrieveFurnitures();
+    this.all_furnitures();
   }
 
-  retrieveFurnitures(): void {
-    this.furnitureService.getAll()
-      .subscribe({
-        next: (data) => {
-          this.furnitures = data;
-          console.log(data);
-        },
-        error: (e) => console.error(e)
-      });
+  all_furnitures(): void {
+    this.furnitureService.all_furnitures().subscribe({
+      next: data => {
+        this.furnitures = data;
+      },
+      error: e => {
+        console.error(e);
+      }
+    })
   }
 
-  refreshList(): void {
-    this.retrieveFurnitures();
-    this.currentFurniture = {};
-    this.currentIndex = -1;
-  }
-
-  setActiveFurniture(furniture: Furniture, index: number): void {
+  set_furniture(furniture: Furniture, i: Number): void {
+    this.currentIndex = i;
     this.currentFurniture = furniture;
-    this.currentIndex = index;
   }
 
-  removeAllFurnitures(): void {
-    this.furnitureService.deleteAll()
-      .subscribe({
-        next: (res) => {
-          console.log(res);
-          this.refreshList();
-        },
-        error: (e) => console.error(e)
-      });
-  }
-
-  searchTitle(): void {
-    this.currentFurniture = {};
-    this.currentIndex = -1;
-
-    this.furnitureService.findByTitle(this.title)
-      .subscribe({
-        next: (data) => {
-          this.furnitures = data;
-          console.log(data);
-        },
-        error: (e) => console.error(e)
-      });
+  delete_all_furniture(): void {
+    this.furnitureService.delete_all_furnitures().subscribe({
+      next: data => {
+        this.furnitures = [];
+        this.toastrService.success("All furnitures has been removed")
+      },
+      error: (e) => this.toastrService.error("Can't remove all furnitures")
+    });
   }
 
 }

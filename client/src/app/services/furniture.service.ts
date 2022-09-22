@@ -1,42 +1,41 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Furniture } from '../models/furniture.model';
 
-const baseUrl = 'http://localhost:8080/api/furnitures';
+const URL = 'http://localhost:8080/api/furnitures';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class FurnitureService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Furniture[]> {
-    return this.http.get<Furniture[]>(baseUrl);
+  all_furnitures(): Observable<Furniture[]> {
+    return this.http.get<Furniture[]>(URL);
   }
 
-  get(id: any): Observable<Furniture> {
-    return this.http.get(`${baseUrl}/${id}`);
+  get_furniture(id: String): Observable<Furniture> {
+    return this.http.get<Furniture>(`${URL}/${id}`);
   }
 
-  create(data: any): Observable<any> {
-    return this.http.post(baseUrl, data);
+  create_furniture(furniture: Furniture): Observable<Furniture[]> {
+    return this.http.post<Furniture[]>(URL, furniture);
   }
 
-  update(id: any, data: any): Observable<any> {
-    return this.http.put(`${baseUrl}/${id}`, data);
+  update_furniture(furniture: Furniture, id: String): Observable<Furniture[]> {
+    return this.http.put<Furniture[]>(`${URL}/${id}`, furniture);
   }
 
-  delete(id: any): Observable<any> {
-    return this.http.delete(`${baseUrl}/${id}`);
+  delete_furniture(id: String): Observable<Furniture[]> {
+    return this.http.delete<Furniture[]>(`${URL}/${id}`);
+  }
+  
+  delete_all_furnitures(): Observable<Furniture[]> {
+    return this.http.delete<Furniture[]>(`${URL}_all`);
   }
 
-  deleteAll(): Observable<any> {
-    return this.http.delete(baseUrl);
-  }
-
-  findByTitle(title: any): Observable<Furniture[]> {
-    return this.http.get<Furniture[]>(`${baseUrl}?title=${title}`);
-  }
 }
