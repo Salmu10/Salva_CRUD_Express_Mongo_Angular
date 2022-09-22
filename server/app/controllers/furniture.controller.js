@@ -17,7 +17,7 @@ exports.create_furniture = async (req, res) => {
     const new_furniture = await furniture.save();
     res.json(new_furniture);
   } catch (error) {
-    res.status(500).send({message: err.message || "Some error occurred while creating the Furniture."});
+    res.status(500).send({message: error.message || "Some error occurred while creating the Furniture."});
   }
 };
 
@@ -54,6 +54,7 @@ exports.update_furniture = async (req, res) => {
 
       if (old_furniture.name !== req.body.name && req.body.name !== undefined) {
         old_furniture.slug = null;
+        // console.log('error');
       }
 
       old_furniture.name = req.body.name || old_furniture.name;
@@ -79,7 +80,7 @@ exports.delete_furniture = async (req, res) => {
     res.send({message: "Furniture was deleted successfully!"});
   } catch (error) {
     if (error.kind === 'ObjectId') {res.status(404).send({ message: `Furniture not found!`}); }
-    else { res.status(500).send({ message: "Could not delete Furniture with id=" + id }); }
+    else { res.status(500).send({ message: "Could not delete that furniture" }); }
   }
 }
 
@@ -88,6 +89,6 @@ exports.deleteAll_furnitures = async (req, res) => {
     const deleteALL = await Furniture.collection.drop();
     res.send({message: `${data.deletedCount} Furnitures were deleted successfully!`});
   } catch (error) {
-    res.status(500).send({message: err.message || "Some error occurred while removing all furnitures."});
+    res.status(500).send({message: error.message || "Some error occurred while removing all furnitures."});
   }
 }

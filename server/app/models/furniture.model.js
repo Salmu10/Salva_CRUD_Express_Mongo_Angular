@@ -21,7 +21,7 @@ const furniture_schema = mongoose.Schema({
         required: true
     },
     owner: {
-        type: Number,
+        type: String,
         required: true
     }
 });
