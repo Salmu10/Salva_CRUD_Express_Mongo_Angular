@@ -40,7 +40,8 @@ app.get("/", (req, res) => {
 // require("./app/routes/furniture.routes")(app);
 // require("./app/routes/category.routes")(app);
 
-app.use('/api/furnitures', require('./app/routes/furniture.routes'));
+// app.use('/api/furnitures', require('./app/routes/furniture.routes'));
+app.use('/api/categories', require('./app/routes/category.routes'));
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

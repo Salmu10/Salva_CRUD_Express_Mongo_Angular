@@ -1,29 +1,19 @@
-module.exports = app => {
-    const categories = require("../controllers/category.controller.js");
+const express = require('express');
+const router = express.Router();
+const categories = require('../controllers/category.controller.js');
+
   
-    var router = require("express").Router();
-  
-    // Create a new Category
-    router.post("/", categories.create);
-  
-    // Retrieve all Categories
-    router.get("/", categories.findAll);
-  
-    // Retrieve all published Categories
-    router.get("/published", categories.findAllPublished);
-  
-    // Retrieve a single Category with id
-    router.get("/:id", categories.findOne);
-  
-    // Update a Category with id
-    router.put("/:id", categories.update);
-  
-    // Delete a Category with id
-    router.delete("/:id", categories.delete);
-  
-    // Create a new Category
-    router.delete("/", categories.deleteAll);
-  
-    app.use("/api/categories", router);
-  };
-  
+//api/categories
+router.post('/', categories.create_category);
+
+router.get('/', categories.findAll_category);
+
+router.get('/:id', categories.findOne_category);
+
+router.put('/:id', categories.update_category);
+
+router.delete('/:id', categories.delete_category);
+
+router.delete('_all', categories.deleteAll_categories);
+
+module.exports = router;

@@ -34,7 +34,7 @@ exports.findAll_furniture = async (req, res) => {
 exports.findOne_furniture = async (req, res) => {
   try {
       const id = req.params.id
-      const furniture = await Furniture.findOne({id});
+      const furniture = await Furniture.findOne({ slug: id });
       if (!furniture) {
           res.status(404).json(FormatError("Furniture not found", res.statusCode));
       } else {
@@ -50,10 +50,10 @@ exports.findOne_furniture = async (req, res) => {
 exports.update_furniture = async (req, res) => {
   try {
       const id = req.params.id
-      const old_furniture = await Furniture.findOne({ id });
+      const old_furniture = await Furniture.findOne({ slug: id });
 
       if (old_furniture.name !== req.body.name && req.body.name !== undefined) {
-          console.log('undefined_error');
+        old_furniture.slug = null;
       }
 
       old_furniture.name = req.body.name || old_furniture.name;
@@ -74,7 +74,7 @@ exports.update_furniture = async (req, res) => {
 exports.delete_furniture = async (req, res) => {
   try {
     const id = req.params.id
-    const furniture = await Product.findOneAndDelete({ id });
+    const furniture = await Product.findOneAndDelete({ slug: id });
     if (!furniture) {res.status(404).send({ message: `Cannot delete Furniture with id=${id}. Maybe Furniture was not found!`}); }
     res.send({message: "Furniture was deleted successfully!"});
   } catch (error) {

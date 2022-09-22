@@ -1,144 +1,90 @@
-const db = require("../models");
-const Category = db.categories;
+const Category = require("../models/category.model.js");
 
 // Create and Save a new Category
-exports.create = (req, res) => {
-  // Validate request
-  if (!req.body.title) {
-    res.status(400).send({ message: "Content can not be empty!" });
-    return;
+exports.create_category = async (req, res) => {
+  try {
+    const category_data = {
+        name: req.body.name || null,
+        price: req.body.price || 0,
+        description: req.body.description || null,
+        owner: req.body.owner || null,
+    };
+    const category = new Category(category_data);
+    const new_category = await category.save();
+    res.json(new_category);
+  } catch (error) {
+    res.status(500).send({message: err.message || "Some error occurred while creating the Category."});
   }
-
-  // Create a Category
-  const category = new Category({
-    title: req.body.title,
-    description: req.body.description,
-    published: req.body.published ? req.body.published : false
-  });
-
-  // Save Category in the database
-  category
-    .save(category)
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while creating the Category."
-      });
-    });
 };
 
 // Retrieve all Category from the database.
-exports.findAll = (req, res) => {
-  const title = req.query.title;
-  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
-
-  Category.find(condition)
-  .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving categories."
-      });
-    });
-};
-
-// Find a single Category with an id
-exports.findOne = (req, res) => {
-  const id = req.params.id;
-
-  Category.findById(id)
-  .then(data => {
-        console.log('log: ' + data);
-      if (!data)
-        res.status(404).send({ message: "Not found Category with id " + id });
-      else res.send(data);
-    })
-    .catch(err => {
-      res
-        .status(500)
-        .send({ message: "Error retrieving Category with id=" + id });
-    });
-};
-
-// Update a Category by the id in the request
-exports.update = (req, res) => {
-  if (!req.body) {
-    return res.status(400).send({
-      message: "Data to update can not be empty!"
-    });
+exports.findAll_category = async (req, res) => {
+  try {
+    const category = await Category.find();
+    res.json(category);
+  } catch (error) {
+    res.status(400).send({ message: "Some error occurred while retrieving categorys." });
   }
+}
 
-  const id = req.params.id;
-
-  Category.findByIdAndUpdate(id, req.body, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot update Category with id=${id}. Maybe Category was not found!`
-        });
-      } else res.send({ message: "Category was updated successfully." });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Error updating Category with id=" + id
-      });
-    });
-};
-
-// Delete a Category with the specified id in the request
-exports.delete = (req, res) => {
-  const id = req.params.id;
-
-  Category.findByIdAndRemove(id, { useFindAndModify: false })
-    .then(data => {
-      if (!data) {
-        res.status(404).send({
-          message: `Cannot delete Category with id=${id}. Maybe Category was not found!`
-        });
+exports.findOne_category = async (req, res) => {
+  try {
+      const id = req.params.id
+      const category = await Category.findOne({ id });
+      if (!category) {
+          res.status(404).json(FormatError("Category not found", res.statusCode));
       } else {
-        res.send({
-          message: "Category was deleted successfully!"
-        });
+          res.json(category);
+      };
+  } catch (error) {
+      if (error.kind === 'ObjectId') { res.status(404).json(FormatError("category not found", res.statusCode)); }
+      else { res.status(500).json(FormatError("An error has ocurred", res.statusCode)); }
+  }
+};
+
+// // Update a Category by the id in the request
+exports.update_category = async (req, res) => {
+  try {
+      const id = req.params.id
+      const old_category = await Category.findOne({ id });
+
+      if (old_category.name !== req.body.name && req.body.name !== undefined) {
+        // old_category.slug = null;
+        console.log('error');
       }
-    })
-    .catch(err => {
-      res.status(500).send({
-        message: "Could not delete Category with id=" + id
-      });
-    });
-};
 
-// Delete all Categories from the database.
-exports.deleteAll = (req, res) => {
-  Category.deleteMany({})
-    .then(data => {
-      res.send({
-        message: `${data.deletedCount} Categories were deleted successfully!`
-      });
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while removing all categories."
-      });
-    });
-};
+      old_category.name = req.body.name || old_category.name;
+      old_category.price = req.body.price || old_category.price;
+      old_category.description = req.body.description || old_category.description;
+      old_category.owner = req.body.owner || old_category.owner;
+      const update = await old_category.save();
 
-// Find all published Categories
-exports.findAllPublished = (req, res) => {
-  Category.find({ published: true })
-    .then(data => {
-      res.send(data);
-    })
-    .catch(err => {
-      res.status(500).send({
-        message:
-          err.message || "Some error occurred while retrieving categories."
-      });
-    });
-};
+      if (!update) {res.status(404).send({message: `Cannot update Category with id=${id}. Maybe Category was not found!`}); }
+      res.send({ message: "Category was updated successfully." });
+  } catch (error) {
+      if (error.kind === 'ObjectId') {res.status(404).send({message: `Category not found!`}); }
+      else {res.status(500).send({message: "Error updating Category with id=" + id});}
+  }
+}
+
+// // Delete a Category with the specified id in the request
+exports.delete_category = async (req, res) => {
+  try {
+    const id = req.params.id
+    const categorie = await Product.findOneAndDelete({ id });
+    if (!categorie) {res.status(404).send({ message: `Cannot delete Category with id=${id}. Maybe Category was not found!`}); }
+    res.send({message: "Category was deleted successfully!"});
+  } catch (error) {
+    if (error.kind === 'ObjectId') {res.status(404).send({ message: `Category not found!`}); }
+    else { res.status(500).send({ message: "Could not delete Category with id=" + id }); }
+  }
+}
+
+exports.deleteAll_categories = async (req, res) => {
+  try {
+    const deleteALL = await Category.collection.drop();
+    res.send({message: `${data.deletedCount} Category were deleted successfully!`});
+  } catch (error) {
+    res.status(500).send({message: err.message || "Some error occurred while removing all category."});
+  }
+}
