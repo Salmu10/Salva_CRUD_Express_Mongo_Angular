@@ -1,7 +1,3 @@
-// const db = require("../models");
-// const Furniture = db.furnitures;
-
-// import Furniture from "../models/furniture.model.js";
 const Furniture = require("../models/furniture.model.js");
 
 // Create and Save a new Furniture
