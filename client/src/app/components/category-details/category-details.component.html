@@ -6,7 +6,7 @@
           <label><strong>ID:</strong></label> {{ currentCategory.slug }}
       </div> -->
       <div>
-          <label><strong>Category name: </strong></label> {{ currentCategory.name }}
+          <label><strong>Category name: </strong></label> {{ currentCategory.category_name }}
       </div>
       <div>
           <label><strong>Category picture: </strong></label> {{ currentCategory.category_picture }}
@@ -17,7 +17,7 @@
       <a class="badge badge-danger mr-2" (click)="deleteCategory(currentCategory.slug)">Delete</a> -->
   </div>
 
-  <div *ngIf="currentCategory.name == ''">
+  <div *ngIf="currentCategory.category_name == ''">
       <br />
       <p>Please click on a category...</p>
   </div>

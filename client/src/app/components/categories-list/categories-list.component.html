@@ -5,7 +5,7 @@
       <ul class="list-group">
           <li class="list-group-item" *ngFor="let category of categories; let i = index"
               [class.active]="i == currentIndex" (click)="set_category(category, i)">
-              {{ category.name }}
+              {{ category.category_name }}
           </li>
       </ul>
   </div>
