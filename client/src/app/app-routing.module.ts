@@ -1,18 +1,29 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { FurnituresListComponent } from './components/furnitures-list/furnitures-list.component';
-import { FurnitureDetailsComponent } from './components/furniture-details/furniture-details.component';
-import { AddFurnitureComponent } from './components/add-furniture/add-furniture.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'furnitures', pathMatch: 'full' },
-  { path: 'furnitures', component: FurnituresListComponent },
-  { path: 'furnitures/:id', component: FurnitureDetailsComponent },
-  { path: 'add', component: AddFurnitureComponent }
+  {
+    path: 'category',
+    loadChildren: () => import('./category/category.module').then(m => m.CategoriesModule)
+  },
+  {
+    path: 'product',
+    loadChildren: () => import('./product/product.module').then(m => m.ProductsModule)
+  },
+  {
+    path: 'furniture',
+    loadChildren: () => import('./furniture/furniture.module').then(m => m.FurnituresModule)
+  },
+  {
+    path: '',
+    redirectTo: 'category',
+    pathMatch: 'full'
+  }
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

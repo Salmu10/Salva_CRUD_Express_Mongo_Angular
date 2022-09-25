@@ -5,20 +5,16 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
+//Form Reactive
+import { ReactiveFormsModule } from '@angular/forms';
+
 // Toastr
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import { AddFurnitureComponent } from './components/add-furniture/add-furniture.component';
-import { FurnitureDetailsComponent } from './components/furniture-details/furniture-details.component';
-import { FurnituresListComponent } from './components/furnitures-list/furnitures-list.component';
-
 @NgModule({
   declarations: [
     AppComponent,
-    AddFurnitureComponent,
-    FurnitureDetailsComponent,
-    FurnituresListComponent
   ],
   imports: [
     BrowserModule,
@@ -26,8 +22,9 @@ import { FurnituresListComponent } from './components/furnitures-list/furnitures
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
+    ReactiveFormsModule,
     ToastrModule.forRoot({
-      timeOut: 15000, // 15 seconds
+      timeOut: 3000, // 3 seconds
       closeButton: true,
       progressBar: true,
     }),
@@ -35,4 +32,5 @@ import { FurnituresListComponent } from './components/furnitures-list/furnitures
   providers: [],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }

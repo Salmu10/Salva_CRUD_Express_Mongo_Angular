@@ -17,8 +17,8 @@
           </div>
 
           <div class="form-group">
-              <label for="furniture_description">Furniture owner</label>
-              <input class="form-control" id="furniture_description" required [(ngModel)]="new_furniture.owner" name="furniture_description"/>
+              <label for="furniture_owner">Furniture owner</label>
+              <input class="form-control" id="furniture_owner" required [(ngModel)]="new_furniture.owner" name="furniture_owner"/>
           </div>
 
           <button (click)="create_furniture()" class="btn btn-success" *ngIf="!update">Add</button>
