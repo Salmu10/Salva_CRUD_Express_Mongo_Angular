@@ -25,18 +25,7 @@ export class ProductsListComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.all_products();
-  }
-
-  all_products(): void {
-    this.productService.all_products().subscribe({
-      next: data => {
-        this.products = data;
-      },
-      error: e => {
-        console.error(e);
-      }
-    })
+    this.retrieveProducts();
   }
 
   set_product(product: Product, i: Number): void {
@@ -44,10 +33,27 @@ export class ProductsListComponent implements OnInit {
     this.currentProduct = product;
   }
 
+  retrieveProducts(): void {
+    this.productService.all_products()
+      .subscribe({
+        next: (data) => {
+          this.products = data;
+          console.log(data);
+        },
+        error: (e) => console.error(e)
+      });
+  }
+
+  refreshList(): void {
+    this.retrieveProducts();
+    this.currentProduct = {};
+    this.currentIndex = -1;
+  }
+
   delete_all_product(): void {
     this.productService.delete_all_products().subscribe({
       next: data => {
-        this.products = [];
+        this.refreshList();
         this.toastrService.success("All products has been removed")
       },
       error: (e) => this.toastrService.error("Can't remove all products")

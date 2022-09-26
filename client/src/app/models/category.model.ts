@@ -1,5 +1,6 @@
 export class Category {
   slug?: String;
+  id_cat?: String;
   category_name?: String;
-  category_picture?: String;
+  image?: String;
 }

@@ -29,8 +29,9 @@ export class CategoryDetailsComponent implements OnInit {
   @Input() viewMode = false;
 
   @Input() currentCategory: Category = {
+    id_cat: '',
     category_name: "",
-    category_picture: '0'
+    image: '0'
   }
 
   deleteCategory(id: String): void {

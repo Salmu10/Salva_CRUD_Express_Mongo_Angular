@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 
 const categories = require('../../controllers/category.controller.js');
   
@@ -9,6 +8,6 @@ router.get('/', categories.findAll_category);
 router.get('/:id', categories.findOne_category);
 router.put('/:id', categories.update_category);
 router.delete('/:id', categories.delete_category);
-router.delete('_all', categories.deleteAll_categories);
+router.delete('/', categories.deleteAll_categories);
 
 module.exports = router;

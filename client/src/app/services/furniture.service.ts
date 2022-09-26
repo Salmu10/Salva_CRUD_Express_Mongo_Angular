@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Furniture } from '../models/furniture.model';
 
 const URL = 'http://localhost:8080/api/furnitures';
@@ -35,7 +34,7 @@ export class FurnitureService {
   }
   
   delete_all_furnitures(): Observable<Furniture[]> {
-    return this.http.delete<Furniture[]>(`${URL}_all`);
+    return this.http.delete<Furniture[]>(`${URL}`);
   }
 
 }

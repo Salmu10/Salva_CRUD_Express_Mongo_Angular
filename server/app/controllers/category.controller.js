@@ -4,8 +4,9 @@ const Category = require("../models/category.model.js");
 exports.create_category = async (req, res) => {
   try {
     const category_data = {
+      id_cat: req.body.id_cat || null,
       category_name: req.body.category_name || null,
-      category_picture: req.body.category_picture || null,
+      image: req.body.image || null,
     };
     const category = new Category(category_data);
     const new_category = await category.save();
@@ -51,8 +52,9 @@ exports.update_category = async (req, res) => {
         // console.log('error');
       }
 
+      old_category.id_cat = req.body.id_cat || old_category.id_cat;
       old_category.category_name = req.body.category_name || old_category.category_name;
-      old_category.category_picture = req.body.category_picture || old_category.category_picture;
+      old_category.image = req.body.image || old_category.image;
       const category = await old_category.save();
 
       if (!category) {res.status(404).send({message: `Cannot update Category with id=${id}. Maybe Category was not found!`}); }
@@ -78,8 +80,8 @@ exports.delete_category = async (req, res) => {
 
 exports.deleteAll_categories = async (req, res) => {
   try {
-    const deleteALL = await Category.collection.drop();
-    res.send({message: `${data.deletedCount} Category were deleted successfully!`});
+    const deleteALL = await Category.deleteMany();
+    res.send({message: `Categories were deleted successfully!`});
   } catch (error) {
     res.status(500).send({message: err.message || "Some error occurred while removing all category."});
   }

@@ -82,8 +82,8 @@ exports.delete_furniture = async (req, res) => {
 
 exports.deleteAll_furnitures = async (req, res) => {
   try {
-    const deleteALL = await Furniture.collection.drop();
-    res.send({message: `${data.deletedCount} Furnitures were deleted successfully!`});
+    const deleteALL = await Furniture.deleteMany();
+    res.send({message: `Furnitures were deleted successfully!`});
   } catch (error) {
     res.status(500).send({message: error.message || "Some error occurred while removing all furnitures."});
   }

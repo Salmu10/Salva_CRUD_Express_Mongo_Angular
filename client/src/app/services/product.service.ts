@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Product } from '../models/product.model';
 
 const URL = 'http://localhost:8080/api/products';
@@ -35,7 +34,7 @@ export class ProductService {
   }
   
   delete_all_products(): Observable<Product[]> {
-    return this.http.delete<Product[]>(`${URL}_all`);
+    return this.http.delete<Product[]>(`${URL}`);
   }
 
 }

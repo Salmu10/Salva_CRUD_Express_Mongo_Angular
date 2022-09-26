@@ -17,23 +17,13 @@ export class CategoriesListComponent implements OnInit {
   categories?: Category[];
   currentIndex: Number = -1;
   currentCategory: Category = {
+    id_cat: "",
     category_name: "",
-    category_picture: ""
+    image: ""
   };
 
   ngOnInit(): void {
-    this.all_categories();
-  }
-
-  all_categories(): void {
-    this.categoryService.all_categories().subscribe({
-      next: data => {
-        this.categories = data;
-      },
-      error: e => {
-        console.error(e);
-      }
-    })
+    this.retrieveCategories();
   }
 
   set_category(category: Category, i: Number): void {
@@ -41,13 +31,33 @@ export class CategoriesListComponent implements OnInit {
     this.currentCategory = category;
   }
 
+  retrieveCategories(): void {
+    this.categoryService.all_categories()
+      .subscribe({
+        next: (data) => {
+          this.categories = data;
+          console.log(data);
+        },
+        error: (e) => console.error(e)
+      });
+  }
+
+  refreshList(): void {
+    this.retrieveCategories();
+    this.currentCategory = {};
+    this.currentIndex = -1;
+  }
+
   delete_all_category(): void {
     this.categoryService.delete_all_categories().subscribe({
       next: data => {
-        this.categories = [];
+        this.refreshList();
         this.toastrService.success("All categories has been removed")
       },
-      error: (e) => this.toastrService.error("Can't remove all categories")
+      error: (e) => {
+        console.log(e);
+        this.toastrService.error("Can't remove all categories")
+      }
     });
   }
 

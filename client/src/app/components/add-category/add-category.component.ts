@@ -14,8 +14,9 @@ export class AddCategoryComponent implements OnInit {
 
   update: Boolean = false;
   new_category: Category = {
+    id_cat: '',
     category_name: '',
-    category_picture: ''
+    image: ''
   };
   submitted = false;
 

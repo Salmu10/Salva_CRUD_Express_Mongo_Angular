@@ -84,8 +84,8 @@ exports.delete_product = async (req, res) => {
 
 exports.deleteAll_products = async (req, res) => {
   try {
-    const deleteALL = await Product.collection.drop();
-    res.send({message: `${data.deletedCount} Products were deleted successfully!`});
+    const deleteALL = await Product.deleteMany();
+    res.send({message: `Products were deleted successfully!`});
   } catch (error) {
     res.status(500).send({message: error.message || "Some error occurred while removing all products."});
   }

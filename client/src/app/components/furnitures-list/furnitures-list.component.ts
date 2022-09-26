@@ -24,18 +24,8 @@ export class FurnituresListComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.all_furnitures();
-  }
-
-  all_furnitures(): void {
-    this.furnitureService.all_furnitures().subscribe({
-      next: data => {
-        this.furnitures = data;
-      },
-      error: e => {
-        console.error(e);
-      }
-    })
+    // this.all_furnitures();
+    this.retrieveFurnitures();
   }
 
   set_furniture(furniture: Furniture, i: Number): void {
@@ -43,10 +33,40 @@ export class FurnituresListComponent implements OnInit {
     this.currentFurniture = furniture;
   }
 
-  delete_all_furniture(): void {
+  // all_furnitures(): void {
+  //   this.furnitureService.all_furnitures().subscribe({
+  //     next: data => {
+  //       this.furnitures = data;
+  //     },
+  //     error: e => {
+  //       console.error(e);
+  //     }
+  //   })
+  // }
+
+  retrieveFurnitures(): void {
+    this.furnitureService.all_furnitures()
+      .subscribe({
+        next: (data) => {
+          this.furnitures = data;
+          console.log(data);
+        },
+        error: (e) => console.error(e)
+      });
+  }
+
+  refreshList(): void {
+    this.retrieveFurnitures();
+    this.currentFurniture = {};
+    this.currentIndex = -1;
+  }
+
+  delete_all_furnitures(): void {
     this.furnitureService.delete_all_furnitures().subscribe({
       next: data => {
-        this.furnitures = [];
+        console.log(data);
+        this.refreshList();
+        // this.furnitures = [];
         this.toastrService.success("All furnitures has been removed")
       },
       error: (e) => this.toastrService.error("Can't remove all furnitures")

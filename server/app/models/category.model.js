@@ -3,19 +3,23 @@ const slug = require('slug');
 const uniqueValidator = require('mongoose-unique-validator');
 
 const category_schema = mongoose.Schema({
-  slug: { 
-    type: String, 
-    lowercase: true, 
-    unique: true 
-  },
-  category_name: {
-      type: String,
-      required: true
-  },
-  category_picture: {
-      type: String,
-      required: true
-  }
+    slug: { 
+        type: String, 
+        lowercase: true, 
+        unique: true 
+    },
+    id_cat: {
+        type: String,
+        required: true
+    },
+    category_name: {
+        type: String,
+        required: true
+    },
+    image: {
+        type: String,
+        required: true
+    }
 });
 
 category_schema.plugin(uniqueValidator, { msg: "already taken" });
